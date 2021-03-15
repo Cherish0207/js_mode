@@ -33,14 +33,23 @@ class Chain {
       return this.successor.exec.call(this.successor, ...arguments);
     }
   }
+  next() {
+    return this.successor.exec.call(this.successor, ...arguments);
+  }
 }
-
-const chain500 = new Chain(order500);
-const chain200 = new Chain(order200);
-const chainnormal = new Chain(ordernormal);
-chain500.setNextSuccessor(chain200).setNextSuccessor(chainnormal);
-order500(1, true, 500); // 输出：500 元定金预购, 得到 100 优惠券
-// chain500.exec(1, false, 500); // 输出：普通购买, 无优惠券
-// order500( 2, true, 500 ); // 输出：200 元定金预购, 得到 500 优惠券
-// order500( 3, false, 500 ); // 输出：普通购买, 无优惠券
-// order500( 3, false, 0 ); // 输出：手机库存不足
+const fn1 = new Chain(function () {
+  console.log(1);
+  return "nextSuccessor";
+});
+const fn2 = new Chain(function () {
+  console.log(2);
+  var self = this;
+  setTimeout(function () {
+    self.next(); // 异步，调用next
+  }, 1000);
+});
+const fn3 = new Chain(function () {
+  console.log(3);
+});
+fn1.setNextSuccessor(fn2).setNextSuccessor(fn3);
+fn1.exec();
