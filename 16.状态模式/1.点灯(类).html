@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      class Light {
+        constructor() {
+          this.state = "off"; // 给电灯设置初始状态 off
+          this.button = null; // 电灯开关按钮
+        }
+        init() {
+          const button = document.createElement("button"),
+            self = this;
+          button.innerHTML = "开关";
+          this.button = document.body.appendChild(button);
+          this.button.onclick = function () {
+            self.buttonWasPressed();
+          };
+        }
+        buttonWasPressed() {
+          if (this.state === "off") {
+            console.log("弱光");
+            this.state = "weakLight";
+          } else if (this.state === "weakLight") {
+            console.log("强光");
+            this.state = "strongLight";
+          } else if (this.state === "strongLight") {
+            console.log("关灯");
+            this.state = "off";
+          }
+        }
+      }
+      const light = new Light();
+      light.init();
+    </script>
+  </body>
+</html>
