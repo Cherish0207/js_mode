@@ -9,31 +9,59 @@
 
   <body>
     <script>
+      class State {
+        constructor(light) {
+          this.light = light;
+        }
+        buttonWasPressed() {
+          throw new Error("父类的 buttonWasPressed 方法必须被重写");
+        }
+      }
+      class OffLightState extends State {
+        buttonWasPressed() {
+          console.log("弱光");
+          this.light.setState(this.light.weakLightState);
+        }
+      }
+      class WeakLightState extends State {
+        buttonWasPressed() {
+          console.log("强光");
+          this.light.setState(this.light.strongLightState);
+        }
+      }
+      class StrongLightState extends State {
+        buttonWasPressed() {
+          console.log("超强光");
+          this.light.setState(this.light.superStrongLightState);
+        }
+      }
+      class SuperStrongLightState extends State {
+        buttonWasPressed() {
+          console.log("关灯");
+          this.light.setState(this.light.offLightState);
+        }
+      }
+
       class Light {
         constructor() {
-          this.state = "off"; // 给电灯设置初始状态 off
+          this.offLightState = new OffLightState(this);
+          this.weakLightState = new WeakLightState(this);
+          this.strongLightState = new StrongLightState(this);
+          this.superStrongLightState = new SuperStrongLightState(this);
           this.button = null; // 电灯开关按钮
         }
         init() {
           const button = document.createElement("button"),
             self = this;
+          this.lightState = this.offLightState;
           button.innerHTML = "开关";
           this.button = document.body.appendChild(button);
           this.button.onclick = function () {
-            self.buttonWasPressed();
+            self.lightState.buttonWasPressed();
           };
         }
-        buttonWasPressed() {
-          if (this.state === "off") {
-            console.log("弱光");
-            this.state = "weakLight";
-          } else if (this.state === "weakLight") {
-            console.log("强光");
-            this.state = "strongLight";
-          } else if (this.state === "strongLight") {
-            console.log("关灯");
-            this.state = "off";
-          }
+        setState(lightState) {
+          this.lightState = lightState;
         }
       }
       const light = new Light();
